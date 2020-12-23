@@ -21,6 +21,23 @@ class ViewController: UITableViewController {
         super.viewWillAppear(animated)
         reload()
     }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = deleteAction(at: indexPath)
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+    
+    func deleteAction(at indexPath: IndexPath) -> UIContextualAction {
+        let note = notes[indexPath.row]
+        let action = UIContextualAction(style: .destructive, title: "Delete") {_,_,completion in
+            NoteManager.main.delete(note: note)
+            self.reload()
+            completion(true)
+        }
+        action.image = UIImage(named: "Trash")
+        action.backgroundColor = .red
+        return action
+    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
